@@ -83,7 +83,19 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 Pair.of(String.format("%s/user", apiPrefix), "POST"),
                 Pair.of(String.format("%s/user/refresh-token", apiPrefix), "POST"),
                 Pair.of(String.format("%s/user/send-verification-code", apiPrefix), "POST"),
-                Pair.of(String.format("%s/user/refresh-token", apiPrefix), "POST"));
+                Pair.of(String.format("%s/user/refresh-token", apiPrefix), "POST"),
+                // sagger-ui
+                Pair.of("/v2/api-docs", "GET"),
+                Pair.of("/v3/api-docs", "GET"),
+                Pair.of("/v3/api-docs/**", "GET"),
+                Pair.of("/swagger-resources/**", "GET"),
+                Pair.of("/swagger-ui.html", "GET"),
+                Pair.of("/webjars/**", "GET"),
+                Pair.of("/swagger-resources/configuration/ui", "GET"),
+                Pair.of("/swagger-resources/configuration/security", "GET"),
+                Pair.of("/swagger-ui.html/**", "GET"),
+                Pair.of("/swagger-ui/**", "GET"),
+                Pair.of("/swagger-ui.html/**", "GET"));
 
         String requestPath = request.getServletPath();
         String requestMethod = request.getMethod();

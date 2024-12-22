@@ -48,10 +48,19 @@ public class WebSecurityConfig {
                                 .authorizeHttpRequests(request -> request
                                                 .requestMatchers("/error").permitAll()
                                                 .requestMatchers(HttpMethod.GET,
-                                                                String.format("%s/roles/**", apiPrefix),
-                                                                String.format("%s/health_check/**", apiPrefix),
-                                                                String.format("%s/actuator/**", apiPrefix),
-                                                                String.format("%s/comments/**", apiPrefix))
+                                                                String.format("%s/role/**", apiPrefix),
+                                                                // sagger-ui
+                                                                "/v2/api-docs",
+                                                                "/v3/api-docs",
+                                                                "/v3/api-docs/**",
+                                                                "/swagger-resources/**",
+                                                                "/swagger-ui.html",
+                                                                "/webjars/**",
+                                                                "/swagger-resources/configuration/ui",
+                                                                "/swagger-resources/configuration/security",
+                                                                "/swagger-ui.html/**",
+                                                                "/swagger-ui/**",
+                                                                "/swagger-ui.html/**")
                                                 .permitAll()
                                                 .requestMatchers(HttpMethod.POST,
                                                                 String.format("%s/user/login", apiPrefix),
