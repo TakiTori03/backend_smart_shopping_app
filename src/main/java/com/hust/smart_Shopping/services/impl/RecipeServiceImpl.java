@@ -26,7 +26,7 @@ public class RecipeServiceImpl implements RecipeService {
     private final FoodRepository foodRepository;
 
     @Override
-    public Recipe createRecipe(String foodName, String name, JsonNode htmlContent, String description, User user) {
+    public Recipe createRecipe(String foodName, String name, String htmlContent, String description, User user) {
         if (recipeRepository.existsByName(name))
             throw new BusinessLogicException("");
         Food food = foodRepository.findByName(foodName).orElseThrow(() -> new DataNotFoundException(""));
@@ -42,7 +42,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public Recipe updateRecipe(Long recipeID, JsonNode newHtmlContent, String newDescription, String newFoodName,
+    public Recipe updateRecipe(Long recipeID, String newHtmlContent, String newDescription, String newFoodName,
             String newName, User user) {
         Recipe updateRecipe = recipeRepository.findById(recipeID).orElseThrow(() -> new DataNotFoundException(""));
         if (updateRecipe.getUser() != user)

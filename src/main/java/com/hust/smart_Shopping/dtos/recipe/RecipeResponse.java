@@ -15,7 +15,7 @@ public class RecipeResponse {
     private Long id;
     private String name;
     private String description;
-    private JsonNode htmlContent;
+    private String htmlContent;
     private Long foodId;
     private Long userId;
     private Instant createdAt;

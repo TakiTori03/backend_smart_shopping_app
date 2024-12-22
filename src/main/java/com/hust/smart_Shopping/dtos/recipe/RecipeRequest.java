@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class RecipeRequest {
     private Long recipeId;
-    private JsonNode newHtmlContent;
+    private String newHtmlContent;
     private String newDescription;
     private String newFoodName;
     private String newName;

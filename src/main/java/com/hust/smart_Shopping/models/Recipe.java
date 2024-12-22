@@ -23,10 +23,8 @@ public class Recipe extends BaseEntity {
     @Column(name = "description")
     private String description;
 
-    @Deprecated
-    @Column(name = "html_content", columnDefinition = "JSON")
-    @Convert(converter = JsonNodeConverter.class)
-    private JsonNode htmlContent;
+    @Column(name = "html_content", columnDefinition = "TEXT")
+    private String htmlContent;
 
     @ManyToOne
     @JoinColumn(name = "food_id")

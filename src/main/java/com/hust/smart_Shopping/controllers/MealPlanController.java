@@ -84,7 +84,7 @@ public class MealPlanController {
 
         @GetMapping("{date}")
         public ResponseEntity<ApiResponse<?>> getPlanByDate(
-                        @PathVariable("date") @DateTimeFormat(pattern = "M/d/yyyy") LocalDate date,
+                        @PathVariable("date") @DateTimeFormat(pattern = "MM/dd/yyyy") LocalDate date,
                         @RequestHeader("Authorization") String token) {
                 String jwt = token.substring(7);
                 User user = userService.getUserDetailsFromToken(jwt);

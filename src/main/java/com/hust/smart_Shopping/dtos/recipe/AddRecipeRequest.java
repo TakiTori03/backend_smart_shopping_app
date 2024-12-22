@@ -8,6 +8,6 @@ import lombok.Data;
 public class AddRecipeRequest {
     private String foodName;
     private String name;
-    private JsonNode htmlContent;
+    private String htmlContent;
     private String description;
 }

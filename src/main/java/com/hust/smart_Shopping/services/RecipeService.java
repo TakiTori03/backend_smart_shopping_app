@@ -7,9 +7,9 @@ import com.hust.smart_Shopping.models.Recipe;
 import com.hust.smart_Shopping.models.User;
 
 public interface RecipeService {
-    Recipe createRecipe(String foodName, String name, JsonNode htmlContent, String description, User user);
+    Recipe createRecipe(String foodName, String name, String htmlContent, String description, User user);
 
-    Recipe updateRecipe(Long recipeID, JsonNode newHtmlContent, String newDescription, String newFoodName,
+    Recipe updateRecipe(Long recipeID, String newHtmlContent, String newDescription, String newFoodName,
             String newName, User user);
 
     void deleteRecipe(Long recipeId, User user);
