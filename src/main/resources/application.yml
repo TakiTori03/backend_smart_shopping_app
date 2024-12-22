@@ -1,0 +1,89 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: smart_shopping-backend
+
+  #config mysql8
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3307/smart_shopping?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true}
+    username: ${MYSQL_ROOT_USERNAME:root}
+    password: ${MYSQL_ROOT_PASSWORD:root}
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+
+  #config send mail
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: takidev0705@gmail.com
+    password: wgkq giha fycu gnud
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  #config file and multipart file
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+    # config multiple language (en, vi)
+  messages:
+    basename: i18n/messages
+    encoding: UTF-8
+    default-locale: vi # mặc định vi
+
+#cloudinary
+cloudinary:
+  cloud_name: dgjrkjkch
+  api_key: 117489847957392
+  api_secret: wGy6bXdWsLEByD3NNiSSEMhSFlg
+
+api:
+  prefix: /api
+domain:
+  protocol: http://localhost:${server.port}
+
+jwt:
+  expiration: 2592000 # 30 days = 30 * 24 * 60 * 60
+  expiration-refresh-token: 5184000 # 60 days = 60 * 24 * 60 * 60
+  secretKey: "QpOD7PxEqUCWRB8BU6e+Hv29TQLUuG+0sxxSJZWAPGhrVVszWZU2hT5RhoQTvhgv"
+
+logging:
+  level:
+    org:
+      springframework.security: DEBUG
+
+# swagger-ui custom path
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tryItOutEnabled: true
+    filter: true
+  #  api-docs:
+  #    path: /api-docs
+  show-actuator: true
+# #health check
+# management:
+#   endpoint:
+#     health:
+#       show-details: always
+#   endpoints:
+#     web:
+#       base-path: /api/v1/actuator
+#       exposure:
+#         include: "health, info"
