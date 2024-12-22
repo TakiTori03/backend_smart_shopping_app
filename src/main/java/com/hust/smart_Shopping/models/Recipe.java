@@ -1,8 +1,10 @@
 package com.hust.smart_Shopping.models;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.hust.smart_Shopping.utils.JsonNodeConverter;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -21,7 +23,9 @@ public class Recipe extends BaseEntity {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "html_content")
+    @Deprecated
+    @Column(name = "html_content", columnDefinition = "JSON")
+    @Convert(converter = JsonNodeConverter.class)
     private JsonNode htmlContent;
 
     @ManyToOne
