@@ -1,10 +1,6 @@
 package com.hust.smart_Shopping.models;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.hust.smart_Shopping.utils.JsonNodeConverter;
-
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;

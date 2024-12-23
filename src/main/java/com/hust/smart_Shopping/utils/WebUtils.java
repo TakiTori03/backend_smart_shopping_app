@@ -10,4 +10,8 @@ public class WebUtils {
     public static HttpServletRequest getCurrentRequest() {
         return ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
     }
+
+    public static String getJwtfromRequest(HttpServletRequest request) {
+        return request.getHeader("Authorization").substring(7);
+    }
 }

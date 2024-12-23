@@ -20,8 +20,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.hust.smart_Shopping.filters.JwtTokenFilter;
 
-import java.util.List;
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hust.smart_Shopping.components.TranslateMessages;
 import com.hust.smart_Shopping.dtos.ApiResponse;
+import com.hust.smart_Shopping.dtos.ApiSuccessCode;
 import com.hust.smart_Shopping.dtos.user.GroupRequest;
 import com.hust.smart_Shopping.dtos.user.CreateGroupResponse;
 import com.hust.smart_Shopping.dtos.user.FamilyInfoResponse;
@@ -54,7 +55,8 @@ public class UserController extends TranslateMessages {
                 return ResponseEntity.ok().body(
                                 ApiResponse.<RegistrationResponse>builder()
 
-                                                .message(translate(MessageKeys.REGISTER_SUCCESS))
+                                                .message(translate(ApiSuccessCode.LOGIN_SUCCESS.getMessage()))
+                                                .code(ApiSuccessCode.LOGIN_SUCCESS.getCode())
                                                 .payload(userService.createUser(userRequest))
                                                 .build());
 
@@ -75,7 +77,8 @@ public class UserController extends TranslateMessages {
 
                 return ResponseEntity.ok(ApiResponse.<LoginResponse>builder()
 
-                                .message(translate(MessageKeys.LOGIN_SUCCESS))
+                                .message(translate(ApiSuccessCode.LOGIN_SUCCESS.getMessage()))
+                                .code(ApiSuccessCode.LOGIN_SUCCESS.getCode())
                                 .payload(LoginResponse.builder()
                                                 .accessToken(token.getToken())
                                                 .refreshToken(token.getRefreshToken())
@@ -96,6 +99,8 @@ public class UserController extends TranslateMessages {
         public ResponseEntity<ApiResponse<?>> sendVerificationCode(@ModelAttribute VerificationRequest request) {
 
                 return ResponseEntity.ok(ApiResponse.<VerificationResponse>builder()
+                                .message(translate(ApiSuccessCode.SEND_CODE_SUCCESS.getMessage()))
+                                .code(ApiSuccessCode.SEND_CODE_SUCCESS.getCode())
                                 .payload(userService.sendVerificationCode(request.getEmail())).build());
         }
 
@@ -114,7 +119,8 @@ public class UserController extends TranslateMessages {
                 Token newToken = userService.refreshToken(refreshRequest.getRefreshToken(), isMoblieDevice(userAgent));
 
                 return ResponseEntity.ok(ApiResponse.<RefreshTokenResponse>builder()
-
+                                .code(ApiSuccessCode.REFRESH_SUCCESS.getCode())
+                                .message(translate(ApiSuccessCode.REFRESH_SUCCESS.getMessage()))
                                 .payload(RefreshTokenResponse.builder()
                                                 .accessToken(newToken.getToken())
                                                 .refreshToken(newToken.getRefreshToken())
@@ -139,7 +145,8 @@ public class UserController extends TranslateMessages {
                 userService.changePassword(request.getOldPassword(),
                                 request.getNewPassword(), user);
                 return ResponseEntity.ok(ApiResponse.builder()
-
+                                .code(ApiSuccessCode.CHANGE_PASS_SUCCESS.getCode())
+                                .message(translate(ApiSuccessCode.CHANGE_PASS_SUCCESS.getMessage()))
                                 .build());
 
         }

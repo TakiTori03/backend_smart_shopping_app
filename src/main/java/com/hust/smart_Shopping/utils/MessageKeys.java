@@ -7,7 +7,12 @@ public class MessageKeys {
     public static final String EMAIL_EXISTED = "user.login.email_existed";
     public static final String PHONE_NUMBER_AND_PASSWORD_FAILED = "user.login.phone_number_and_password_failed";
     public static final String CAN_NOT_CREATE_ACCOUNT_ROLE_ADMIN = "user.login.can_not_account_role_admin";
+    public static final String SEND_CODE_SUCCESS = "user.login.can_not_account_role_admin";
+    public static final String VERIFY_SUCCESS = "user.login.can_not_account_role_admin";
+    public static final String CHANGE_PASS_SUCCESS = "user.login.can_not_account_role_admin";
+    public static final String EDIT_PROFILE_SUCCESS = "user.login.can_not_account_role_admin";
 
+    // register
     // register
     public static final String PASSWORD_NOT_MATCH = "user.register.password_not_match";
     public static final String REGISTER_SUCCESS = "user.register.register_successlly";
