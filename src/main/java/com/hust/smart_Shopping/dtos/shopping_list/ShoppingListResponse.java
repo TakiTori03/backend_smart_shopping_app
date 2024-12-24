@@ -1,8 +1,11 @@
 package com.hust.smart_Shopping.dtos.shopping_list;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.hust.smart_Shopping.models.ShoppingList;
@@ -19,7 +22,8 @@ public class ShoppingListResponse {
         private String note;
         private Long beLongsToGroupAdminId;
         private Long assignedtoUserId;
-        private Instant date;
+        @DateTimeFormat(pattern = "MM/dd/yyyy")
+        private LocalDate date;
         private Instant createdAt;
         private Instant updatedAt;
         private Long userId;

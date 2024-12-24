@@ -55,8 +55,8 @@ public class UserController extends TranslateMessages {
                 return ResponseEntity.ok().body(
                                 ApiResponse.<RegistrationResponse>builder()
 
-                                                .message(translate(ApiSuccessCode.LOGIN_SUCCESS.getMessage()))
-                                                .code(ApiSuccessCode.LOGIN_SUCCESS.getCode())
+                                                .message(translate(ApiSuccessCode.REGISTER_SUCCESS.getMessage()))
+                                                .code(ApiSuccessCode.REFRESH_SUCCESS.getCode())
                                                 .payload(userService.createUser(userRequest))
                                                 .build());
 

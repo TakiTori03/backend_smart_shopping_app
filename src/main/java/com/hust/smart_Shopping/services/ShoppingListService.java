@@ -1,6 +1,7 @@
 package com.hust.smart_Shopping.services;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 
 import com.hust.smart_Shopping.dtos.shopping_list.AddTasksRequest.AddTagRequest;
@@ -8,9 +9,9 @@ import com.hust.smart_Shopping.models.ShoppingList;
 import com.hust.smart_Shopping.models.User;
 
 public interface ShoppingListService {
-    ShoppingList createShoppingListInFamily(String name, String userName, String note, Instant date, User user);
+    ShoppingList createShoppingListInFamily(String name, String userName, String note, LocalDate date, User user);
 
-    ShoppingList updateShoppingList(Long listId, String newName, String newUserName, Instant newDate, String newNote,
+    ShoppingList updateShoppingList(Long listId, String newName, String newUserName, LocalDate newDate, String newNote,
             User user);
 
     void deleteShoppingList(Long listId, User user);

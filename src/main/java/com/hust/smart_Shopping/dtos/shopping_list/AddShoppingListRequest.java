@@ -1,8 +1,8 @@
 package com.hust.smart_Shopping.dtos.shopping_list;
 
-import java.time.Instant;
+import java.time.LocalDate;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Data;
 
@@ -11,7 +11,6 @@ public class AddShoppingListRequest {
     private String name;
     private String assignToUsername;
     private String note;
-
-    @JsonFormat(pattern = "MM/dd/yyyy")
-    private Instant date;
+    @DateTimeFormat(pattern = "MM/dd/yyyy")
+    private LocalDate date;
 }

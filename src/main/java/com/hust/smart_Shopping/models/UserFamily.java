@@ -1,5 +1,6 @@
 package com.hust.smart_Shopping.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.hust.smart_Shopping.constants.KeyId.UserFamilyKey;
 
 import jakarta.persistence.Column;
@@ -36,7 +37,8 @@ public class UserFamily {
 
     @OneToOne
     @MapsId("userId")
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id")
+    @JsonBackReference
     private User user;
 
     @ManyToOne

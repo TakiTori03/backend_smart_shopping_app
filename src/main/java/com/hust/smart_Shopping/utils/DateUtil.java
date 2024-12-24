@@ -1,41 +1,47 @@
-package com.hust.smart_Shopping.utils;
+// package com.hust.smart_Shopping.utils;
 
-import java.io.IOException;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
+// import java.io.IOException;
+// import java.time.Instant;
+// import java.time.LocalDate;
+// import java.time.ZoneId;
+// import java.time.format.DateTimeFormatter;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
+// import com.fasterxml.jackson.core.JsonGenerator;
+// import com.fasterxml.jackson.core.JsonParser;
+// import com.fasterxml.jackson.databind.DeserializationContext;
+// import com.fasterxml.jackson.databind.JsonDeserializer;
+// import com.fasterxml.jackson.databind.JsonSerializer;
+// import com.fasterxml.jackson.databind.SerializerProvider;
 
-public class DateUtil {
+// public class DateUtil {
 
-    private static final DateTimeFormatter ISO_DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+// // Định dạng MM/dd/yyyy
+// private static final DateTimeFormatter DATE_FORMATTER =
+// DateTimeFormatter.ofPattern("MM/dd/yyyy");
 
-    // Deserialize: từ chuỗi "yyyy-MM-dd" thành Instant
-    public static class InstantDeserializer extends JsonDeserializer<Instant> {
+// // Deserialize: từ chuỗi "MM/dd/yyyy" thành Instant
+// public static class InstantDeserializer extends JsonDeserializer<Instant> {
 
-        @Override
-        public Instant deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-            String date = p.getText();
-            LocalDate localDate = LocalDate.parse(date, ISO_DATE_FORMAT);
-            return localDate.atStartOfDay().toInstant(ZoneOffset.UTC);
-        }
-    }
+// @Override
+// public Instant deserialize(JsonParser p, DeserializationContext ctxt) throws
+// IOException {
+// String date = p.getText();
+// LocalDate localDate = LocalDate.parse(date, DATE_FORMATTER);
+// return localDate.atStartOfDay(ZoneId.systemDefault()).toInstant();
+// }
 
-    // Serialize: từ Instant thành chuỗi "yyyy-MM-dd"
-    public static class InstantSerializer extends JsonSerializer<Instant> {
+// }
 
-        @Override
-        public void serialize(Instant value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
-            // Chuyển Instant thành LocalDate và sau đó format theo định dạng "yyyy-MM-dd"
-            String formattedDate = value.atZone(ZoneOffset.UTC).toLocalDate().format(ISO_DATE_FORMAT);
-            gen.writeString(formattedDate);
-        }
-    }
-}
+// // Serialize: từ Instant thành chuỗi "MM/dd/yyyy"
+// public static class InstantSerializer extends JsonSerializer<Instant> {
+
+// @Override
+// public void serialize(Instant value, JsonGenerator gen, SerializerProvider
+// serializers) throws IOException {
+// String formattedDate =
+// value.atZone(ZoneId.systemDefault()).toLocalDate().format(DATE_FORMATTER);
+// gen.writeString(formattedDate);
+// }
+
+// }
+// }

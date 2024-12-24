@@ -2,6 +2,7 @@ package com.hust.smart_Shopping.models;
 
 import java.time.Instant;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.hust.smart_Shopping.constants.Enum.VerificationType;
 
 import jakarta.persistence.Column;
@@ -21,6 +22,7 @@ import lombok.Setter;
 public class Verification extends BaseEntity {
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, unique = true)
+    @JsonBackReference
     private User user;
 
     @Column(name = "code", unique = true)

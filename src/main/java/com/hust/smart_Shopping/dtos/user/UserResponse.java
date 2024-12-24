@@ -3,11 +3,9 @@ package com.hust.smart_Shopping.dtos.user;
 import java.time.Instant;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.hust.smart_Shopping.models.Role;
 import com.hust.smart_Shopping.models.User;
-import com.hust.smart_Shopping.utils.DateUtil;
 
 import lombok.Builder;
 import lombok.Data;

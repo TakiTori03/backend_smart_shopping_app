@@ -3,6 +3,7 @@ package com.hust.smart_Shopping.services.impl;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.hust.smart_Shopping.exceptions.payload.BusinessLogicException;
@@ -22,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 @Slf4j
 public class FoodServiceImpl implements FoodService {
 

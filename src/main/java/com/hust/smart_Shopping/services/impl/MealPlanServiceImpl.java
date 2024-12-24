@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hust.smart_Shopping.constants.Enum.MealStatus;
 import com.hust.smart_Shopping.constants.Enum.MealType;
@@ -22,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 @Slf4j
 public class MealPlanServiceImpl implements MealPlanService {
 

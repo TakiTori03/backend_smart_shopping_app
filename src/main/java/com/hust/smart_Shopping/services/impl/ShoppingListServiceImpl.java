@@ -1,11 +1,12 @@
 package com.hust.smart_Shopping.services.impl;
 
-import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hust.smart_Shopping.constants.AppConstants;
 import com.hust.smart_Shopping.constants.Enum.TaskStatus;
@@ -32,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 @Slf4j
 public class ShoppingListServiceImpl implements ShoppingListService {
 
@@ -43,11 +45,15 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     private final TaskRepository taskRepository;
 
     @Override
-    public ShoppingList createShoppingListInFamily(String name, String userName, String note, Instant date, User user) {
+    public ShoppingList createShoppingListInFamily(String name, String userName, String note, LocalDate date,
+            User user) {
         UserFamily userFamily = userFamilyRepository.findByUser(user).orElseThrow(() -> new BusinessLogicException(""));
         if (!userFamily.getRole().getName().equals(AppConstants.RoleType.LEADER))
             throw new BusinessLogicException("");
         User member = userRepository.findByNickname(userName).orElseThrow(() -> new DataNotFoundException(""));
+        if (member.getUserFamily().getFamily() != userFamily.getFamily()) {
+            throw new BusinessLogicException("");
+        }
         ShoppingList shoppingListForUser = new ShoppingList();
         shoppingListForUser.setUser(member);
         shoppingListForUser.setFamily(userFamily.getFamily());
@@ -61,7 +67,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     }
 
     @Override
-    public ShoppingList updateShoppingList(Long listId, String newName, String newUserName, Instant newDate,
+    public ShoppingList updateShoppingList(Long listId, String newName, String newUserName, LocalDate newDate,
             String newNote, User user) {
 
         UserFamily userFamily = userFamilyRepository.findByUser(user).orElseThrow(() -> new BusinessLogicException(""));

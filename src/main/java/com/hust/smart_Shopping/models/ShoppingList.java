@@ -1,6 +1,7 @@
 package com.hust.smart_Shopping.models;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class ShoppingList extends BaseEntity {
     private String note;
 
     @Column(name = "date")
-    private Instant date;
+    private LocalDate date;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
