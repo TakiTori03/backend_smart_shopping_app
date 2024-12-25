@@ -30,18 +30,6 @@
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.fasterxml.jackson.datatype</groupId>
-			<artifactId>jackson-datatype-jsr310</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.datatype</groupId>
-			<artifactId>jackson-datatype-hibernate6</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>javax.activation</groupId>
 			<artifactId>javax.activation-api</artifactId>
 			<version>1.2.0</version>
@@ -163,7 +151,6 @@
 						<arg>-Amapstruct.verbose=true</arg>
 					</compilerArgs>
 				</configuration>
-
 			</plugin>
 		</plugins>
 	</build>

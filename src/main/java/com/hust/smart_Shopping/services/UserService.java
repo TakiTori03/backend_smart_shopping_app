@@ -1,5 +1,7 @@
 package com.hust.smart_Shopping.services;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.hust.smart_Shopping.dtos.user.FamilyInfoResponse;
 import com.hust.smart_Shopping.dtos.user.RegistrationRequest;
 import com.hust.smart_Shopping.dtos.user.RegistrationResponse;
@@ -24,7 +26,8 @@ public interface UserService {
     void logout(String jwt);
 
     void changePassword(String currentPassword, String newPassword, User user);
-    // User updateUser(Long userId, UpdateUserDTO updateUserDTO) throws Exception;
+
+    String updateUser(String nickName, MultipartFile image, User user);
 
     void deleteUser(String jwt);
 

@@ -20,18 +20,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hust.smart_Shopping.dtos.ApiResponse;
-import com.hust.smart_Shopping.dtos.fridge.AddFridgeItemRequest;
-import com.hust.smart_Shopping.dtos.fridge.FridgeItemResponse;
-import com.hust.smart_Shopping.dtos.fridge.FridgeRequest;
+
 import com.hust.smart_Shopping.dtos.meal.AddMealPlanRequest;
 import com.hust.smart_Shopping.dtos.meal.MealPlanRequest;
 import com.hust.smart_Shopping.dtos.meal.MealPlanResponse;
-import com.hust.smart_Shopping.models.MealPlan;
+
 import com.hust.smart_Shopping.models.User;
-import com.hust.smart_Shopping.repositories.MealPlanRepository;
+
 import com.hust.smart_Shopping.services.MealPlanService;
 import com.hust.smart_Shopping.services.UserService;
 
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -82,9 +81,9 @@ public class MealPlanController {
                 return ResponseEntity.ok(ApiResponse.builder().build());
         }
 
-        @GetMapping("{date}")
+        @GetMapping()
         public ResponseEntity<ApiResponse<?>> getPlanByDate(
-                        @PathVariable("date") @DateTimeFormat(pattern = "MM/dd/yyyy") LocalDate date,
+                        @RequestParam("date") @DateTimeFormat(pattern = "MM/dd/yyyy") LocalDate date,
                         @RequestHeader("Authorization") String token) {
                 String jwt = token.substring(7);
                 User user = userService.getUserDetailsFromToken(jwt);

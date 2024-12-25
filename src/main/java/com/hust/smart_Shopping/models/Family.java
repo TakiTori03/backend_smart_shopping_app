@@ -34,4 +34,5 @@ public class Family extends BaseEntity {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "family", orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<ShoppingList> shoppingLists = new ArrayList<>();
+
 }

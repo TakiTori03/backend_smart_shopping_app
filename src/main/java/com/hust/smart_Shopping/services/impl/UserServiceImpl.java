@@ -13,11 +13,10 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.hust.smart_Shopping.components.JwtTokenUtil;
 
@@ -47,6 +46,7 @@ import com.hust.smart_Shopping.repositories.RoleRepository;
 import com.hust.smart_Shopping.repositories.UserFamilyRepository;
 import com.hust.smart_Shopping.repositories.UserRepository;
 import com.hust.smart_Shopping.repositories.VerificationRepository;
+import com.hust.smart_Shopping.services.ImageService;
 import com.hust.smart_Shopping.services.MailService;
 import com.hust.smart_Shopping.services.TokenService;
 import com.hust.smart_Shopping.services.UserService;
@@ -64,6 +64,7 @@ public class UserServiceImpl implements UserService {
 
         private final UserRepository userRepository;
         private final RoleRepository roleRepository;
+        private final ImageService imageService;
         private final VerificationRepository verificationRepository;
         private final PasswordEncoder passwordEncoder;
         private final MailService mailService;
@@ -134,12 +135,6 @@ public class UserServiceImpl implements UserService {
 
                 verificationRepository.save(verification);
 
-                // Send email
-                // Map<String, Object> attributes = Map.of(
-                // "token", token,
-                // "link", MessageFormat.format("{0}/signup?userId={1}",
-                // AppConstants.FRONTEND_HOST, user.getId()));
-                // mailService.sendVerificationToken(user.getEmail(), attributes);
                 return RegistrationResponse.builder()
                                 .user(UserResponse.fromUser(user))
                                 .confirmToken(token)
@@ -331,7 +326,7 @@ public class UserServiceImpl implements UserService {
 
                 // khoi tao role leader cho user
                 if (roleRepository.findByName(AppConstants.RoleType.LEADER).isEmpty()) {
-                        Role leaderRole = new Role(AppConstants.RoleType.LEADER, "leader pers");
+                        Role leaderRole = new Role(AppConstants.RoleType.LEADER);
 
                         roleRepository.save(leaderRole);
                         // tao leader role trong user family
@@ -366,7 +361,7 @@ public class UserServiceImpl implements UserService {
 
                 // khoi tao role member cho user
                 if (roleRepository.findByName(AppConstants.RoleType.MEMBER).isEmpty()) {
-                        Role memberRole = new Role(AppConstants.RoleType.MEMBER, "member pers");
+                        Role memberRole = new Role(AppConstants.RoleType.MEMBER);
 
                         roleRepository.save(memberRole);
                         // tao member role trong user family
@@ -379,22 +374,38 @@ public class UserServiceImpl implements UserService {
         }
 
         @Override
+        @Transactional
         public void deleteMember(User leader, String username) {
-                // check nguoi dung da tao group family chua
-                UserFamily userFamily = userFamilyRepository.findByUser(leader)
-                                .orElseThrow(() -> new BusinessLogicException(""));
-                if (!userFamily.getRole().getName().equals(AppConstants.RoleType.LEADER))
-                        throw new BusinessLogicException("");
+                // 1. Kiểm tra xem leader có phải là LEADER của một family hay không
+                UserFamily leaderFamily = userFamilyRepository.findByUser(leader)
+                                .orElseThrow(() -> new BusinessLogicException("Leader chưa tham gia group family nào"));
 
-                // check username ton tai hay khong va da thuoc 1 group family nao chua
+                if (!AppConstants.RoleType.LEADER.equals(leaderFamily.getRole().getName())) {
+                        throw new BusinessLogicException("Người dùng không phải là LEADER của group family");
+                }
+
+                // 2. Tìm member cần xóa theo username
                 User member = userRepository.findByNickname(username)
                                 .orElseThrow(() -> new DataNotFoundException(MessageKeys.USER_NOT_FOUND));
 
-                UserFamily deleteUserFamily = userFamilyRepository.findByUser(member)
-                                .orElseThrow(() -> new BusinessLogicException(""));
+                // 3. Kiểm tra xem member có thuộc cùng family với leader không
+                UserFamily memberFamily = userFamilyRepository.findByUser(member)
+                                .orElseThrow(() -> new BusinessLogicException(
+                                                "Thành viên này chưa tham gia group family nào"));
 
-                userFamilyRepository.delete(deleteUserFamily);
-                log.debug("delete member: {} from family : {}", member, userFamily.getFamily());
+                if (leaderFamily.getFamily() != memberFamily.getFamily()) {
+                        throw new BusinessLogicException("Thành viên không thuộc cùng group family với leader");
+                }
+
+                // 4. Thực hiện xóa UserFamily
+
+                // sua cac thuc the trong entity cha
+                memberFamily.getFamily().getUserFamilies().remove(memberFamily);
+                memberFamily.getUser().setUserFamily(null);
+                userFamilyRepository.delete(memberFamily);
+
+                // 5. Log kết quả
+                log.debug("Xóa thành viên: {} khỏi family: {}", member.getNickname(), leaderFamily.getFamily().getId());
         }
 
         @Override
@@ -413,6 +424,21 @@ public class UserServiceImpl implements UserService {
                                 .builder().groupAdmin(groupAdmin).members(members.stream()
                                                 .map(u -> UserResponse.fromUser(u)).collect(Collectors.toList()))
                                 .build();
+
+        }
+
+        @Override
+        public String updateUser(String nickName, MultipartFile image, User user) {
+                if (userRepository.existsByNickname(nickName))
+                        throw new BusinessLogicException("");
+                String photoUrl = imageService.uploadImage(image, "users");
+
+                log.debug("update user: {}", user);
+                user.setNickname(nickName);
+                user.setAvatar(photoUrl);
+
+                userRepository.save(user);
+                return photoUrl;
 
         }
 

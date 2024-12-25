@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import org.springframework.web.bind.annotation.PostMapping;
-
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +18,7 @@ import com.hust.smart_Shopping.dtos.ApiResponse;
 import com.hust.smart_Shopping.dtos.ApiSuccessCode;
 import com.hust.smart_Shopping.dtos.user.GroupRequest;
 import com.hust.smart_Shopping.dtos.user.CreateGroupResponse;
+import com.hust.smart_Shopping.dtos.user.EditUserRequest;
 import com.hust.smart_Shopping.dtos.user.FamilyInfoResponse;
 import com.hust.smart_Shopping.dtos.user.LoginRequest;
 import com.hust.smart_Shopping.dtos.user.LoginResponse;
@@ -33,7 +34,6 @@ import com.hust.smart_Shopping.models.Token;
 import com.hust.smart_Shopping.models.User;
 import com.hust.smart_Shopping.services.TokenService;
 import com.hust.smart_Shopping.services.UserService;
-import com.hust.smart_Shopping.utils.MessageKeys;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -138,7 +138,7 @@ public class UserController extends TranslateMessages {
 
         // controler cho viec edit personal
         @PostMapping("/change-password")
-        public ResponseEntity<ApiResponse<?>> updatePassword(@ModelAttribute PasswordChangeRequest request,
+        public ResponseEntity<ApiResponse<?>> changePassword(@ModelAttribute PasswordChangeRequest request,
                         @RequestHeader("Authorization") String token) {
                 String jwt = token.substring(7);
                 User user = userService.getUserDetailsFromToken(jwt);
@@ -151,14 +151,18 @@ public class UserController extends TranslateMessages {
 
         }
 
-        // @PutMapping()
-        // public ResponseEntity<ApiResponse<?>> editUser(@RequestParam("image")
-        // MultipartFile image,
-        // @RequestParam("username") String nickname,@RequestHeader("Authorization")
-        // String token ){
-        // String jwt = token.substring(7);
-        // String photoUrl = userService.editUser
-        // }
+        @PutMapping()
+        public ResponseEntity<ApiResponse<?>> editUser(@ModelAttribute EditUserRequest request,
+                        @RequestHeader("Authorization") String token) {
+
+                String jwt = token.substring(7);
+                User user = userService.getUserDetailsFromToken(jwt);
+
+                return ResponseEntity.ok(ApiResponse.<String>builder()
+                                .message(translate(ApiSuccessCode.EDIT_PROFILE_SUCCESS.getMessage()))
+                                .payload(userService.updateUser(request.getUserName(), request.getImage(), user))
+                                .build());
+        }
 
         @GetMapping()
         public ResponseEntity<ApiResponse<?>> getUserDetail(@RequestHeader("Authorization") String token) {
@@ -203,7 +207,7 @@ public class UserController extends TranslateMessages {
 
         @DeleteMapping("/group")
         public ResponseEntity<ApiResponse<?>> deleteMember(@RequestHeader("Authorization") String token,
-                        @RequestParam("username") String username) {
+                        @RequestParam("userName") String username) {
                 String jwt = token.substring(7);
                 User user = userService.getUserDetailsFromToken(jwt);
 

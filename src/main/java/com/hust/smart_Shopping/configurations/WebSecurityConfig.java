@@ -72,10 +72,9 @@ public class WebSecurityConfig {
                                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                                 .authenticationProvider(authenticationProvider)
                                 .exceptionHandling(exception -> exception
-                                                // .authenticationEntryPoint((request, response, authException) ->
-                                                // response
-                                                // .sendError(HttpServletResponse.SC_UNAUTHORIZED,
-                                                // authException.getMessage()))
+                                                .authenticationEntryPoint((request, response, authException) -> response
+                                                                .sendError(HttpServletResponse.SC_UNAUTHORIZED,
+                                                                                authException.getMessage()))
                                                 .accessDeniedHandler((request, response,
                                                                 accessDeniedException) -> response.sendError(
                                                                                 HttpServletResponse.SC_FORBIDDEN,

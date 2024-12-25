@@ -2,9 +2,6 @@ package com.hust.smart_Shopping.dtos.user;
 
 import java.time.Instant;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.hust.smart_Shopping.models.Role;
 import com.hust.smart_Shopping.models.User;
 
 import lombok.Builder;
@@ -37,7 +34,7 @@ public class UserResponse {
 
     private String avatar;
 
-    private Role role;
+    private String role;
 
     private boolean isActivated;
     private boolean isVerified;
@@ -47,12 +44,6 @@ public class UserResponse {
     private Instant createdAt;
 
     private Instant updatedAt;
-
-    // @Data
-    // public static class RoleResponse {
-    // private String name;
-    // private String permission;
-    // }
 
     public static UserResponse fromUser(User user) {
         return UserResponse.builder()
@@ -67,13 +58,15 @@ public class UserResponse {
                 .isActivated(user.isActivated())
                 .isVerified(user.isVerified())
                 .gender(user.getGender() != null ? user.getGender().toString() : null)
-                .role(user.getRole())
+                .role(user.getRole().getName())
                 .language(user.getLanguage())
                 .timezone(user.getTimezone())
                 .deviceId(user.getDevice_id())
                 .countryCode(user.getCountryCode())
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())
+                .beLongToGroupAdminId(
+                        user.getUserFamily() != null ? user.getUserFamily().getFamily().getLeader().getId() : null)
                 .build();
     }
 }
