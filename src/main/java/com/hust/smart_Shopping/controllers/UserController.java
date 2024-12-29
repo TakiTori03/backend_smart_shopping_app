@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hust.smart_Shopping.components.TranslateMessages;
 import com.hust.smart_Shopping.dtos.ApiResponse;
-import com.hust.smart_Shopping.dtos.ApiSuccessCode;
 import com.hust.smart_Shopping.dtos.user.GroupRequest;
 import com.hust.smart_Shopping.dtos.user.CreateGroupResponse;
 import com.hust.smart_Shopping.dtos.user.EditUserRequest;
@@ -34,6 +33,7 @@ import com.hust.smart_Shopping.models.Token;
 import com.hust.smart_Shopping.models.User;
 import com.hust.smart_Shopping.services.TokenService;
 import com.hust.smart_Shopping.services.UserService;
+import com.hust.smart_Shopping.utils.MessageKeys;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -55,8 +55,7 @@ public class UserController extends TranslateMessages {
                 return ResponseEntity.ok().body(
                                 ApiResponse.<RegistrationResponse>builder()
 
-                                                .message(translate(ApiSuccessCode.REGISTER_SUCCESS.getMessage()))
-                                                .code(ApiSuccessCode.REFRESH_SUCCESS.getCode())
+                                                .message(translate(MessageKeys.REGISTER_SUCCESS))
                                                 .payload(userService.createUser(userRequest))
                                                 .build());
 
@@ -77,8 +76,8 @@ public class UserController extends TranslateMessages {
 
                 return ResponseEntity.ok(ApiResponse.<LoginResponse>builder()
 
-                                .message(translate(ApiSuccessCode.LOGIN_SUCCESS.getMessage()))
-                                .code(ApiSuccessCode.LOGIN_SUCCESS.getCode())
+                                .message(translate(MessageKeys.LOGIN_SUCCESS))
+
                                 .payload(LoginResponse.builder()
                                                 .accessToken(token.getToken())
                                                 .refreshToken(token.getRefreshToken())
@@ -99,8 +98,8 @@ public class UserController extends TranslateMessages {
         public ResponseEntity<ApiResponse<?>> sendVerificationCode(@ModelAttribute VerificationRequest request) {
 
                 return ResponseEntity.ok(ApiResponse.<VerificationResponse>builder()
-                                .message(translate(ApiSuccessCode.SEND_CODE_SUCCESS.getMessage()))
-                                .code(ApiSuccessCode.SEND_CODE_SUCCESS.getCode())
+                                .message(translate(MessageKeys.SEND_CODE_SUCCESS))
+
                                 .payload(userService.sendVerificationCode(request.getEmail())).build());
         }
 
@@ -119,8 +118,8 @@ public class UserController extends TranslateMessages {
                 Token newToken = userService.refreshToken(refreshRequest.getRefreshToken(), isMoblieDevice(userAgent));
 
                 return ResponseEntity.ok(ApiResponse.<RefreshTokenResponse>builder()
-                                .code(ApiSuccessCode.REFRESH_SUCCESS.getCode())
-                                .message(translate(ApiSuccessCode.REFRESH_SUCCESS.getMessage()))
+
+                                .message(translate(MessageKeys.REFRESH_TOKEN_SUCCESS))
                                 .payload(RefreshTokenResponse.builder()
                                                 .accessToken(newToken.getToken())
                                                 .refreshToken(newToken.getRefreshToken())
@@ -145,8 +144,8 @@ public class UserController extends TranslateMessages {
                 userService.changePassword(request.getOldPassword(),
                                 request.getNewPassword(), user);
                 return ResponseEntity.ok(ApiResponse.builder()
-                                .code(ApiSuccessCode.CHANGE_PASS_SUCCESS.getCode())
-                                .message(translate(ApiSuccessCode.CHANGE_PASS_SUCCESS.getMessage()))
+
+                                .message(translate(MessageKeys.CHANGE_PASS_SUCCESS))
                                 .build());
 
         }
@@ -159,7 +158,7 @@ public class UserController extends TranslateMessages {
                 User user = userService.getUserDetailsFromToken(jwt);
 
                 return ResponseEntity.ok(ApiResponse.<String>builder()
-                                .message(translate(ApiSuccessCode.EDIT_PROFILE_SUCCESS.getMessage()))
+                                .message(translate(MessageKeys.EDIT_PROFILE_SUCCESS))
                                 .payload(userService.updateUser(request.getUserName(), request.getImage(), user))
                                 .build());
         }
@@ -171,6 +170,7 @@ public class UserController extends TranslateMessages {
                 User user = userService.getUserDetailsFromToken(jwt);
 
                 return ResponseEntity.ok(ApiResponse.<UserResponse>builder()
+                                .message(translate(MessageKeys.GET_INFO_SUCCESS))
                                 .payload(UserResponse.fromUser(user))
                                 .build());
         }
@@ -179,7 +179,8 @@ public class UserController extends TranslateMessages {
         public ResponseEntity<ApiResponse<?>> deleteUser(@RequestHeader("Authorization") String token) {
                 String jwt = token.substring(7);
                 userService.deleteUser(jwt);
-                return ResponseEntity.ok(ApiResponse.builder().build());
+                return ResponseEntity
+                                .ok(ApiResponse.builder().message(translate(MessageKeys.DELETE_USER_SUCCESS)).build());
         }
 
         // controlerr cho tao va quan ly group family
@@ -189,7 +190,7 @@ public class UserController extends TranslateMessages {
                 User user = userService.getUserDetailsFromToken(jwt);
                 Long adminId = userService.createGroup(user);
                 return ResponseEntity.ok(ApiResponse.<CreateGroupResponse>builder()
-
+                                .message(translate(MessageKeys.CREATE_GROUP_SUCCESS))
                                 .payload(CreateGroupResponse.builder().adminId(adminId).build())
                                 .build());
         }
@@ -202,7 +203,8 @@ public class UserController extends TranslateMessages {
 
                 userService.addMember(user, request.getUsername());
 
-                return ResponseEntity.ok(ApiResponse.builder().build());
+                return ResponseEntity
+                                .ok(ApiResponse.builder().message(translate(MessageKeys.SUCCESS)).build());
         }
 
         @DeleteMapping("/group")
@@ -213,7 +215,8 @@ public class UserController extends TranslateMessages {
 
                 userService.deleteMember(user, username);
 
-                return ResponseEntity.ok(ApiResponse.builder().build());
+                return ResponseEntity.ok(
+                                ApiResponse.builder().message(translate(MessageKeys.DELETE_MEMBER_SUCCESS)).build());
         }
 
         @GetMapping("/group")
@@ -222,7 +225,7 @@ public class UserController extends TranslateMessages {
                 User user = userService.getUserDetailsFromToken(jwt);
 
                 return ResponseEntity.ok(ApiResponse.<FamilyInfoResponse>builder()
-
+                                .message(translate(MessageKeys.GET_INFO_GROUP_MEMBER_SUCCESS))
                                 .payload(userService.getInfoFamily(user))
                                 .build());
         }

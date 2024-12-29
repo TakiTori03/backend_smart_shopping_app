@@ -19,11 +19,13 @@ public class MealPlanResponse {
     private String name;
     private String status;
 
-    @JsonFormat(pattern = "M/d/yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
     private LocalDate timestamp;
     private Long foodId;
     private Long userId;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "UTC")
     private Instant createdAt;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "UTC")
     private Instant updatedAt;
     private FoodResponse food;
 

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hust.smart_Shopping.components.TranslateMessages;
 import com.hust.smart_Shopping.dtos.ApiResponse;
 import com.hust.smart_Shopping.dtos.admin.AdminRequest;
 import com.hust.smart_Shopping.dtos.admin.AdminUpdateRequest;
@@ -28,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("${api.prefix}/admin")
 @RequiredArgsConstructor
-public class AdminController {
+public class AdminController extends TranslateMessages {
 
     private final AdminService adminService;
 

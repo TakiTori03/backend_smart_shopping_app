@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.hust.smart_Shopping.exceptions.payload.BusinessLogicException;
 import com.hust.smart_Shopping.exceptions.payload.DataNotFoundException;
 import com.hust.smart_Shopping.models.Food;
@@ -14,6 +13,7 @@ import com.hust.smart_Shopping.models.User;
 import com.hust.smart_Shopping.repositories.FoodRepository;
 import com.hust.smart_Shopping.repositories.RecipeRepository;
 import com.hust.smart_Shopping.services.RecipeService;
+import com.hust.smart_Shopping.utils.MessageKeys;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,8 +30,9 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public Recipe createRecipe(String foodName, String name, String htmlContent, String description, User user) {
         if (recipeRepository.existsByName(name))
-            throw new BusinessLogicException("");
-        Food food = foodRepository.findByName(foodName).orElseThrow(() -> new DataNotFoundException(""));
+            throw new BusinessLogicException(MessageKeys.RECIPE_EXIST);
+        Food food = foodRepository.findByName(foodName)
+                .orElseThrow(() -> new DataNotFoundException(MessageKeys.NOT_FOUND));
         Recipe newRecipe = new Recipe();
         newRecipe.setFood(food);
         newRecipe.setName(name);
@@ -46,13 +47,15 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public Recipe updateRecipe(Long recipeID, String newHtmlContent, String newDescription, String newFoodName,
             String newName, User user) {
-        Recipe updateRecipe = recipeRepository.findById(recipeID).orElseThrow(() -> new DataNotFoundException(""));
+        Recipe updateRecipe = recipeRepository.findById(recipeID)
+                .orElseThrow(() -> new DataNotFoundException(MessageKeys.NOT_FOUND));
         if (updateRecipe.getUser() != user)
-            throw new BusinessLogicException("");
+            throw new BusinessLogicException(MessageKeys.YOU_NOT_HAVE_PERMISSION);
         if (recipeRepository.existsByName(newName))
-            throw new BusinessLogicException("");
+            throw new BusinessLogicException(MessageKeys.RECIPE_EXIST);
 
-        Food newFood = foodRepository.findByName(newFoodName).orElseThrow(() -> new DataNotFoundException(""));
+        Food newFood = foodRepository.findByName(newFoodName)
+                .orElseThrow(() -> new DataNotFoundException(MessageKeys.NOT_FOUND));
         log.debug("update recipe: {}", updateRecipe);
         updateRecipe.setHtmlContent(newHtmlContent);
         updateRecipe.setDescription(newDescription);
@@ -65,9 +68,10 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public void deleteRecipe(Long recipeId, User user) {
-        Recipe deleteRecipe = recipeRepository.findById(recipeId).orElseThrow(() -> new DataNotFoundException(""));
+        Recipe deleteRecipe = recipeRepository.findById(recipeId)
+                .orElseThrow(() -> new DataNotFoundException(MessageKeys.NOT_FOUND));
         if (deleteRecipe.getUser() != user)
-            throw new BusinessLogicException("");
+            throw new BusinessLogicException(MessageKeys.YOU_NOT_HAVE_PERMISSION);
 
         recipeRepository.delete(deleteRecipe);
         log.debug("delete recipe: {}", deleteRecipe);
@@ -75,7 +79,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public List<Recipe> getAllByFoodId(Long foodId) {
-        Food food = foodRepository.findById(foodId).orElseThrow(() -> new DataNotFoundException(""));
+        Food food = foodRepository.findById(foodId).orElseThrow(() -> new DataNotFoundException(MessageKeys.NOT_FOUND));
         return recipeRepository.findByFood(food);
     }
 

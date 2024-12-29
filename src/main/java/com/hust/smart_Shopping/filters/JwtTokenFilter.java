@@ -84,6 +84,17 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 Pair.of(String.format("%s/user/refresh-token", apiPrefix), "POST"),
                 Pair.of(String.format("%s/user/send-verification-code", apiPrefix), "POST"),
                 Pair.of(String.format("%s/user/refresh-token", apiPrefix), "POST"),
+
+                // mvc
+
+                Pair.of("/auth/**", "GET"),
+                Pair.of("/image/**", "GET"),
+                Pair.of("/**", "GET"),
+                Pair.of("/favicon.ico", "GET"),
+                Pair.of("/user", "GET"),
+                Pair.of("/css/**", "GET"),
+                Pair.of("/js/**", "GET"),
+                Pair.of("/libs/**", "GET"),
                 // sagger-ui
                 Pair.of("/v2/api-docs", "GET"),
                 Pair.of("/v3/api-docs", "GET"),

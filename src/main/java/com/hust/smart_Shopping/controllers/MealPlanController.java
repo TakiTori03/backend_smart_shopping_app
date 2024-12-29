@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hust.smart_Shopping.components.TranslateMessages;
 import com.hust.smart_Shopping.dtos.ApiResponse;
 
 import com.hust.smart_Shopping.dtos.meal.AddMealPlanRequest;
@@ -29,8 +29,8 @@ import com.hust.smart_Shopping.models.User;
 
 import com.hust.smart_Shopping.services.MealPlanService;
 import com.hust.smart_Shopping.services.UserService;
+import com.hust.smart_Shopping.utils.MessageKeys;
 
-import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("${api.prefix}/meal")
 @RequiredArgsConstructor
-public class MealPlanController {
+public class MealPlanController extends TranslateMessages {
 
         private final UserService userService;
         private final MealPlanService mealPlanService;
@@ -54,6 +54,7 @@ public class MealPlanController {
                                                 .fromMealPlan(mealPlanService.createMealPlan(request.getFoodName(),
                                                                 request.getTimestamp(),
                                                                 request.getName(), user)))
+                                .message(translate(MessageKeys.CREATE_MEAL_PLAN_SUCCESS))
                                 .build());
         }
 
@@ -68,6 +69,7 @@ public class MealPlanController {
                                 .payload(MealPlanResponse.fromMealPlan(mealPlanService.updateMealPlan(
                                                 request.getPlanId(), request.getNewFoodName(),
                                                 request.getNewName(), user)))
+                                .message(translate(MessageKeys.SUCCESS))
                                 .build());
         }
 
@@ -78,7 +80,8 @@ public class MealPlanController {
                 User user = userService.getUserDetailsFromToken(jwt);
 
                 mealPlanService.deletePlan(id, user);
-                return ResponseEntity.ok(ApiResponse.builder().build());
+                return ResponseEntity.ok(
+                                ApiResponse.builder().message(translate(MessageKeys.DELETE_MEAL_PLAN_SUCCESS)).build());
         }
 
         @GetMapping()
@@ -94,6 +97,7 @@ public class MealPlanController {
                                                 .stream()
                                                 .map(mealPlan -> MealPlanResponse.allFromMealPlan(mealPlan))
                                                 .collect(Collectors.toList()))
+                                .message(translate(MessageKeys.GET_PLAN_BY_DATE_SUCCESS))
                                 .build());
         }
 }

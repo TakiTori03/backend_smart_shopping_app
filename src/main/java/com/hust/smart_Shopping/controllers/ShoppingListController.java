@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hust.smart_Shopping.components.TranslateMessages;
 import com.hust.smart_Shopping.dtos.ApiResponse;
 import com.hust.smart_Shopping.dtos.shopping_list.AddShoppingListRequest;
 import com.hust.smart_Shopping.dtos.shopping_list.AddTasksRequest;
@@ -26,6 +27,7 @@ import com.hust.smart_Shopping.models.UserFamily;
 import com.hust.smart_Shopping.repositories.UserFamilyRepository;
 import com.hust.smart_Shopping.services.ShoppingListService;
 import com.hust.smart_Shopping.services.UserService;
+import com.hust.smart_Shopping.utils.MessageKeys;
 
 import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("${api.prefix}/shopping")
 @RequiredArgsConstructor
-public class ShoppingListController {
+public class ShoppingListController extends TranslateMessages {
 
         private final UserService userService;
         private final ShoppingListService shoppingListService;
@@ -52,6 +54,7 @@ public class ShoppingListController {
                                                 .fromShoppingList(shoppingListService.createShoppingListInFamily(
                                                                 request.getName(), request.getAssignToUsername(),
                                                                 request.getNote(), request.getDate(), user)))
+                                .message(translate(MessageKeys.CREATE_SHOPPINGLIST_FOR_MEMBER_SUCCESS))
                                 .build());
         }
 
@@ -66,6 +69,7 @@ public class ShoppingListController {
                                                 request.getListId(), request.getNewName(),
                                                 request.getNewAssignToUsername(),
                                                 request.getNewDate(), request.getNewNote(), user)))
+                                .message(translate(MessageKeys.SUCCESS))
                                 .build());
         }
 
@@ -77,6 +81,7 @@ public class ShoppingListController {
 
                 shoppingListService.deleteShoppingList(listId, user);
                 return ResponseEntity.ok(ApiResponse.builder()
+                                .message(translate(MessageKeys.DELETE_SHOPPINGLIST_SUCCESS))
                                 .build());
         }
 
@@ -88,6 +93,7 @@ public class ShoppingListController {
 
                 shoppingListService.createTasksForList(request.getListId(), request.getTasks(), user);
                 return ResponseEntity.ok(ApiResponse.builder()
+                                .message(translate(MessageKeys.CREATE_TASK_SUCCESS))
                                 .build());
         }
 
@@ -105,6 +111,7 @@ public class ShoppingListController {
                                                 .map(shoppingList -> ShoppingListResponse
                                                                 .allFromShoppingList(shoppingList))
                                                 .collect(Collectors.toList()))
+                                .message(translate(MessageKeys.GET_ALL_SHOPPINGLIST_SUCCESS))
                                 .build());
         }
 
@@ -116,6 +123,7 @@ public class ShoppingListController {
 
                 shoppingListService.deleteTaskInFamily(taskId, user);
                 return ResponseEntity.ok(ApiResponse.builder()
+                                .message(translate(MessageKeys.DELETE_TASK_SUCCESS))
                                 .build());
         }
 
@@ -128,17 +136,17 @@ public class ShoppingListController {
                 shoppingListService.updateTaskInFamily(request.getTaskId(), request.getNewFoodName(),
                                 request.getQuantity(), user);
                 return ResponseEntity.ok(ApiResponse.builder()
+                                .message(translate(MessageKeys.SUCCESS))
                                 .build());
         }
 
         @PutMapping("/task/mark")
-        public ResponseEntity<ApiResponse<?>> markTask(@PathParam("taskId") Long taskId,
+        public void markTask(@PathParam("taskId") Long taskId,
                         @RequestHeader("Authorization") String token) {
                 String jwt = token.substring(7);
                 User user = userService.getUserDetailsFromToken(jwt);
 
                 shoppingListService.markTask(taskId, user);
-                return ResponseEntity.ok(ApiResponse.builder()
-                                .build());
+
         }
 }

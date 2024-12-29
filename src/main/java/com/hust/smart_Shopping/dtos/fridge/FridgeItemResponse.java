@@ -2,6 +2,7 @@ package com.hust.smart_Shopping.dtos.fridge;
 
 import java.time.Instant;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.hust.smart_Shopping.dtos.food.FoodResponse;
 import com.hust.smart_Shopping.models.FridgeItem;
@@ -16,9 +17,13 @@ public class FridgeItemResponse {
     private Long id;
     private Integer quantity;
     private String note;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "UTC")
     private Instant createdAt;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "UTC")
     private Instant updatedAt;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "UTC")
     private Instant startDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "UTC")
     private Instant expiredDate;
     private Long foodId;
     private Long userId;

@@ -8,6 +8,18 @@ public interface AppConstants {
         public static final String MEMBER = "MEMBER";
     }
 
+    public class PathConstants {
+        public static final String PERFUME = "/perfume";
+        public static final String CART = "/cart";
+        public static final String ORDER = "/order";
+        public static final String USER = "/user";
+        public static final String ADMIN = "/admin";
+        public static final String LOGIN = "/login";
+        public static final String REGISTRATION = "/registration";
+        public static final String AUTH = "/auth";
+        public static final String ERROR = "/error";
+    }
+
     public String DEFAULT_COUNTRYCODE = "VN";
     public Integer DEFAULT_TIMEZONE = 7;
     public String DEFAULT_LANGUAGE = "vi";

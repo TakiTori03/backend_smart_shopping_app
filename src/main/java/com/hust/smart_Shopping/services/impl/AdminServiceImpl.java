@@ -12,6 +12,7 @@ import com.hust.smart_Shopping.models.Unit;
 import com.hust.smart_Shopping.repositories.CategoryRepository;
 import com.hust.smart_Shopping.repositories.UnitRepository;
 import com.hust.smart_Shopping.services.AdminService;
+import com.hust.smart_Shopping.utils.MessageKeys;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +29,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public Category createCategory(String name) {
         if (categoryRepository.existsByName(name))
-            throw new BusinessLogicException("");
+            throw new BusinessLogicException(MessageKeys.CATEGORY_EXIST);
         Category newCategory = new Category();
         newCategory.setName(name);
         log.debug("create category : {}", newCategory);
@@ -44,7 +45,7 @@ public class AdminServiceImpl implements AdminService {
     public void updateCategory(String oldName, String newName) {
 
         Category updateCategory = categoryRepository.findByName(oldName)
-                .orElseThrow(() -> new BusinessLogicException(""));
+                .orElseThrow(() -> new DataNotFoundException(MessageKeys.NOT_FOUND));
         updateCategory.setName(newName);
         categoryRepository.save(updateCategory);
         log.debug("update category: {}", updateCategory);
@@ -52,7 +53,8 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public void deleteCategory(String name) {
-        Category deleteCategory = categoryRepository.findByName(name).orElseThrow(() -> new DataNotFoundException(""));
+        Category deleteCategory = categoryRepository.findByName(name)
+                .orElseThrow(() -> new DataNotFoundException(MessageKeys.NOT_FOUND));
         categoryRepository.delete(deleteCategory);
         log.debug("delete category with name: {}", name);
 
@@ -61,7 +63,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public Unit createUnit(String name) {
         if (unitRepository.existsByName(name))
-            throw new BusinessLogicException("");
+            throw new BusinessLogicException(MessageKeys.UNIT_EXIST);
         Unit newUnit = new Unit();
         newUnit.setName(name);
         log.debug("create unit : {}", newUnit);
@@ -76,7 +78,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public void updateUnit(String oldName, String newName) {
         Unit updateUnit = unitRepository.findByName(oldName)
-                .orElseThrow(() -> new BusinessLogicException(""));
+                .orElseThrow(() -> new DataNotFoundException(MessageKeys.NOT_FOUND));
         updateUnit.setName(newName);
         unitRepository.save(updateUnit);
         log.debug("update unit: {}", updateUnit);
@@ -84,7 +86,8 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public void deleteUnit(String name) {
-        Unit deleteUnit = unitRepository.findByName(name).orElseThrow(() -> new DataNotFoundException(""));
+        Unit deleteUnit = unitRepository.findByName(name)
+                .orElseThrow(() -> new DataNotFoundException(MessageKeys.NOT_FOUND));
         unitRepository.delete(deleteUnit);
         log.debug("delete unit with name: {}", name);
     }

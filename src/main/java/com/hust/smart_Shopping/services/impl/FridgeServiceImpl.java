@@ -16,6 +16,7 @@ import com.hust.smart_Shopping.models.User;
 import com.hust.smart_Shopping.repositories.FoodRepository;
 import com.hust.smart_Shopping.repositories.FridgeItemRepository;
 import com.hust.smart_Shopping.services.FridgeService;
+import com.hust.smart_Shopping.utils.MessageKeys;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +32,7 @@ public class FridgeServiceImpl implements FridgeService {
 
     @Override
     public FridgeItem createFridgeItem(String name, Long time, Integer quantity, User user) {
-        Food food = foodRepository.findByName(name).orElseThrow(() -> new DataNotFoundException(""));
+        Food food = foodRepository.findByName(name).orElseThrow(() -> new DataNotFoundException(MessageKeys.NOT_FOUND));
         FridgeItem newFridgeItem = new FridgeItem();
         newFridgeItem.setFood(food);
         newFridgeItem.setUser(user);
@@ -47,8 +48,9 @@ public class FridgeServiceImpl implements FridgeService {
     @Override
     public FridgeItem updateFridgeItem(Long id, String newNote, Integer newQuantity, Long newTime, String newName) {
         FridgeItem updateFridgeItem = fridgeItemRepository.findById(id)
-                .orElseThrow(() -> new DataNotFoundException(""));
-        Food food = foodRepository.findByName(newName).orElseThrow(() -> new DataNotFoundException(""));
+                .orElseThrow(() -> new DataNotFoundException(MessageKeys.NOT_FOUND));
+        Food food = foodRepository.findByName(newName)
+                .orElseThrow(() -> new DataNotFoundException(MessageKeys.NOT_FOUND));
 
         log.debug("update fridge item: {}", updateFridgeItem);
 
@@ -62,7 +64,8 @@ public class FridgeServiceImpl implements FridgeService {
 
     @Override
     public void deleteFridgeItem(String foodName, User user) {
-        Food food = foodRepository.findByName(foodName).orElseThrow(() -> new DataNotFoundException(""));
+        Food food = foodRepository.findByName(foodName)
+                .orElseThrow(() -> new DataNotFoundException(MessageKeys.NOT_FOUND));
 
         List<FridgeItem> deleteFridgeItem = fridgeItemRepository.findByFoodAndUser(food, user);
 
@@ -80,9 +83,10 @@ public class FridgeServiceImpl implements FridgeService {
 
     @Override
     public List<FridgeItem> getSpecificItem(String foodName) {
-        Food food = foodRepository.findByName(foodName).orElseThrow(() -> new DataNotFoundException(""));
+        Food food = foodRepository.findByName(foodName)
+                .orElseThrow(() -> new DataNotFoundException(MessageKeys.NOT_FOUND));
         if (!fridgeItemRepository.existsByFood(food))
-            throw new BusinessLogicException("");
+            throw new BusinessLogicException(MessageKeys.FOOD_EXIST);
 
         return fridgeItemRepository.findByFood(food);
     }

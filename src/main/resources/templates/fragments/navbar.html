@@ -1,0 +1,78 @@
+<!-- navbar -->
+<div th:fragment="navbar" xmlns:th="http://www.thymeleaf.org">
+  <div class="navcontainer">
+    <nav class="nav">
+      <div class="nav-upper-options">
+        <!-- Dashboard -->
+        <a th:href="@{/dashboard}" class="nav-option option1">
+          <img
+            src="https://media.geeksforgeeks.org/wp-content/uploads/20221210182148/Untitled-design-(29).png"
+            class="nav-img"
+            alt="dashboard"
+          />
+          <h3>Dashboard</h3>
+        </a>
+
+        <!-- Users -->
+        <a th:href="@{/users}" class="option2 nav-option">
+          <img
+            th:src="@{/static/images/icon/user_icon.png}"
+            class="nav-img"
+            alt="users"
+          />
+          <h3>Users</h3>
+        </a>
+
+        <!-- Categories -->
+        <a th:href="@{/categories}" class="nav-option option3">
+          <img
+            th:src="@{/static/images/icon/category_icon.png}"
+            class="nav-img"
+            alt="categories"
+          />
+          <h3>Categories</h3>
+        </a>
+
+        <!-- Units -->
+        <a th:href="@{/units}" class="nav-option option4">
+          <img
+            th:src="@{/static/images/icon/unit_icon.png}"
+            class="nav-img"
+            alt="units"
+          />
+          <h3>Units</h3>
+        </a>
+
+        <!-- Foods -->
+        <a th:href="@{/foods}" class="nav-option option5">
+          <img
+            th:src="@{/static/images/icon/food_icon.png}"
+            class="nav-img"
+            alt="foods"
+          />
+          <h3>Foods</h3>
+        </a>
+
+        <!-- Settings -->
+        <a th:href="@{/settings}" class="nav-option option6">
+          <img
+            th:src="@{/static/images/icon/setting_icon.png}"
+            class="nav-img"
+            alt="settings"
+          />
+          <h3>Settings</h3>
+        </a>
+
+        <!-- Logout -->
+        <a th:href="@{/logout}" class="nav-option logout">
+          <img
+            th:src="@{/static/images/icon/logout_icon.png}"
+            class="nav-img"
+            alt="logout"
+          />
+          <h3>Logout</h3>
+        </a>
+      </div>
+    </nav>
+  </div>
+</div>

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hust.smart_Shopping.components.TranslateMessages;
 import com.hust.smart_Shopping.dtos.ApiResponse;
 
 import com.hust.smart_Shopping.dtos.recipe.AddRecipeRequest;
@@ -26,6 +27,7 @@ import com.hust.smart_Shopping.dtos.recipe.RecipeResponse;
 import com.hust.smart_Shopping.models.User;
 import com.hust.smart_Shopping.services.RecipeService;
 import com.hust.smart_Shopping.services.UserService;
+import com.hust.smart_Shopping.utils.MessageKeys;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("${api.prefix}/recipe")
 @RequiredArgsConstructor
-public class RecipeController {
+public class RecipeController extends TranslateMessages {
 
         private final RecipeService recipeService;
         private final UserService userService;
@@ -51,6 +53,7 @@ public class RecipeController {
                                                                 request.getName(),
                                                                 request.getHtmlContent(), request.getDescription(),
                                                                 user)))
+                                .message(translate(MessageKeys.CREATE_RECIPE_SUCCESS))
                                 .build());
         }
 
@@ -66,6 +69,7 @@ public class RecipeController {
                                                 request.getNewHtmlContent(),
                                                 request.getNewDescription(), request.getNewFoodName(),
                                                 request.getNewName(), user)))
+                                .message(translate(MessageKeys.SUCCESS))
                                 .build());
         }
 
@@ -76,7 +80,8 @@ public class RecipeController {
                 User user = userService.getUserDetailsFromToken(jwt);
 
                 recipeService.deleteRecipe(id, user);
-                return ResponseEntity.ok(ApiResponse.builder().build());
+                return ResponseEntity.ok(
+                                ApiResponse.builder().message(translate(MessageKeys.DELETE_RECIPE_SUCCESS)).build());
         }
 
         @GetMapping()
@@ -89,6 +94,7 @@ public class RecipeController {
                                                 .stream()
                                                 .map(recipe -> RecipeResponse.fromRecipe(recipe))
                                                 .collect(Collectors.toList()))
+                                .message(translate(MessageKeys.GET_RECIPE_BY_FOOD_SUCCESS))
                                 .build());
         }
 }

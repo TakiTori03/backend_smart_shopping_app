@@ -91,7 +91,7 @@ public class TokenServiceImpl implements TokenService {
 
     public void deleteTokenWithJwt(String jwt) {
         Token token = tokenRepository.findByToken(jwt)
-                .orElseThrow(() -> new DataNotFoundException(""));
+                .orElseThrow(() -> new DataNotFoundException(MessageKeys.NOT_FOUND));
 
         log.debug("delete token: {}", token);
         tokenRepository.delete(token);

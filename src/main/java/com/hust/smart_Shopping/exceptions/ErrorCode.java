@@ -12,6 +12,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ErrorCode {
     UNCATEGORIZED_EXCEPTION(500, MessageKeys.APP_UNCATEGORIZED_500, HttpStatus.INTERNAL_SERVER_ERROR),
+    BAD_LOGIC(101, MessageKeys.BAD_LOGIC, HttpStatus.BAD_REQUEST),
     INVALID_KEY(1001, MessageKeys.APP_AUTHORIZATION_403, HttpStatus.BAD_REQUEST),
     USER_EXISTED(1002, MessageKeys.USER_EXISTED, HttpStatus.BAD_REQUEST),
     USERNAME_INVALID(1003, MessageKeys.USER_ID_REQUIRED, HttpStatus.BAD_REQUEST),

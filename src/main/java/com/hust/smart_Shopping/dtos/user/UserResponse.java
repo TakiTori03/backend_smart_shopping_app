@@ -2,6 +2,7 @@ package com.hust.smart_Shopping.dtos.user;
 
 import java.time.Instant;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hust.smart_Shopping.models.User;
 
 import lombok.Builder;
@@ -41,8 +42,10 @@ public class UserResponse {
 
     private Long beLongToGroupAdminId;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "UTC")
     private Instant createdAt;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "UTC")
     private Instant updatedAt;
 
     public static UserResponse fromUser(User user) {

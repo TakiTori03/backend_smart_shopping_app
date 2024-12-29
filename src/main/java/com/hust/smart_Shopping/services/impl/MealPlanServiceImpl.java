@@ -16,6 +16,7 @@ import com.hust.smart_Shopping.models.User;
 import com.hust.smart_Shopping.repositories.FoodRepository;
 import com.hust.smart_Shopping.repositories.MealPlanRepository;
 import com.hust.smart_Shopping.services.MealPlanService;
+import com.hust.smart_Shopping.utils.MessageKeys;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +32,8 @@ public class MealPlanServiceImpl implements MealPlanService {
 
     @Override
     public MealPlan createMealPlan(String foodName, LocalDate timestamp, String name, User user) {
-        Food food = foodRepository.findByName(foodName).orElseThrow(() -> new DataNotFoundException(""));
+        Food food = foodRepository.findByName(foodName)
+                .orElseThrow(() -> new DataNotFoundException(MessageKeys.NOT_FOUND));
 
         MealType mealName = MealType.valueOf(name.toUpperCase());
 
@@ -49,22 +51,25 @@ public class MealPlanServiceImpl implements MealPlanService {
 
     @Override
     public void deletePlan(Long id, User user) {
-        MealPlan deleteMealPlan = mealPlanRepository.findById(id).orElseThrow(() -> new DataNotFoundException(""));
+        MealPlan deleteMealPlan = mealPlanRepository.findById(id)
+                .orElseThrow(() -> new DataNotFoundException(MessageKeys.NOT_FOUND));
         if (deleteMealPlan.getUser() != user)
-            throw new BusinessLogicException("");
+            throw new BusinessLogicException(MessageKeys.YOU_NOT_HAVE_PERMISSION);
         mealPlanRepository.delete(deleteMealPlan);
         log.debug("delete mealplan : {}", deleteMealPlan);
     }
 
     @Override
     public MealPlan updateMealPlan(Long id, String newFoodName, String newName, User user) {
-        MealPlan updateMealPlan = mealPlanRepository.findById(id).orElseThrow(() -> new DataNotFoundException(""));
+        MealPlan updateMealPlan = mealPlanRepository.findById(id)
+                .orElseThrow(() -> new DataNotFoundException(MessageKeys.NOT_FOUND));
         if (updateMealPlan.getUser() != user)
-            throw new BusinessLogicException("");
+            throw new BusinessLogicException(MessageKeys.YOU_NOT_HAVE_PERMISSION);
         log.debug("update mealplan: {}", updateMealPlan);
         MealType newMealName = MealType.valueOf(newName.toUpperCase());
 
-        Food food = foodRepository.findByName(newFoodName).orElseThrow(() -> new DataNotFoundException(""));
+        Food food = foodRepository.findByName(newFoodName)
+                .orElseThrow(() -> new DataNotFoundException(MessageKeys.NOT_FOUND));
         updateMealPlan.setFood(food);
         updateMealPlan.setName(newMealName);
 

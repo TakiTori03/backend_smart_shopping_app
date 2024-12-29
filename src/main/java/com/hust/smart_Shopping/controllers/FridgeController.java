@@ -3,7 +3,6 @@ package com.hust.smart_Shopping.controllers;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,14 +15,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hust.smart_Shopping.components.TranslateMessages;
 import com.hust.smart_Shopping.dtos.ApiResponse;
-import com.hust.smart_Shopping.dtos.food.FoodResponse;
 import com.hust.smart_Shopping.dtos.fridge.AddFridgeItemRequest;
 import com.hust.smart_Shopping.dtos.fridge.FridgeItemResponse;
 import com.hust.smart_Shopping.dtos.fridge.FridgeRequest;
 import com.hust.smart_Shopping.models.User;
 import com.hust.smart_Shopping.services.FridgeService;
 import com.hust.smart_Shopping.services.UserService;
+import com.hust.smart_Shopping.utils.MessageKeys;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("${api.prefix}/fridge")
 @RequiredArgsConstructor
-public class FridgeController {
+public class FridgeController extends TranslateMessages {
 
         private final FridgeService fridgeService;
         private final UserService userService;
@@ -47,6 +47,7 @@ public class FridgeController {
                                 .payload(FridgeItemResponse
                                                 .fromFridgeItem(fridgeService.createFridgeItem(request.getFoodName(),
                                                                 request.getUseWithin(), request.getQuantity(), user)))
+                                .message(translate(MessageKeys.CREATE_FRIDGE_ITEM_SUCCESS))
                                 .build());
         }
 
@@ -57,6 +58,7 @@ public class FridgeController {
                                 .payload(FridgeItemResponse.fromFridgeItem(fridgeService.updateFridgeItem(
                                                 request.getItemId(), request.getNewNote(), request.getNewQuantity(),
                                                 request.getNewUseWithin(), request.getNewFoodName())))
+                                .message(translate(MessageKeys.SUCCESS))
                                 .build());
         }
 
@@ -67,7 +69,8 @@ public class FridgeController {
                 User user = userService.getUserDetailsFromToken(jwt);
 
                 fridgeService.deleteFridgeItem(foodName, user);
-                return ResponseEntity.ok(ApiResponse.builder().build());
+                return ResponseEntity.ok(ApiResponse.builder()
+                                .message(translate(MessageKeys.DELETE_FRIDGE_ITEM_SUCCESS)).build());
         }
 
         @GetMapping()
@@ -79,6 +82,7 @@ public class FridgeController {
                                 .payload(fridgeService.getAllFridgeItemsWithUser(user).stream()
                                                 .map(fridgeItem -> FridgeItemResponse.allFromFridgeItem(fridgeItem))
                                                 .collect(Collectors.toList()))
+                                .message(translate(MessageKeys.GET_ALL_FRIDGE_ITEM_SUCCESS))
                                 .build());
         }
 
@@ -90,6 +94,7 @@ public class FridgeController {
                                                 .map(fridgeItem -> FridgeItemResponse
                                                                 .specificFromFridgeItem(fridgeItem))
                                                 .collect(Collectors.toList()))
+                                .message(translate(MessageKeys.GET_SPECIFIC_ITEM_SUCCESS))
                                 .build());
         }
 

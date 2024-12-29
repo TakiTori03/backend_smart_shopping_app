@@ -42,9 +42,15 @@ public class WebSecurityConfig {
                 http
                                 .csrf(AbstractHttpConfigurer::disable)
                                 .cors(AbstractHttpConfigurer::disable) // Enable CORS
+
                                 .addFilterAfter(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
+
                                 .authorizeHttpRequests(request -> request
-                                                .requestMatchers("/error").permitAll()
+                                                .requestMatchers("/error", "/css/**", "/js/**", "/libs/**",
+                                                                "/images/**",
+                                                                "/auth/**", "/**", "/user", "/favicon.ico")
+                                                .permitAll() // MVC
+
                                                 .requestMatchers(HttpMethod.GET,
                                                                 String.format("%s/role/**", apiPrefix),
                                                                 // sagger-ui
@@ -67,10 +73,19 @@ public class WebSecurityConfig {
                                                                                 apiPrefix),
                                                                 String.format("%s/user/refresh-token", apiPrefix))
                                                 .permitAll()
+
                                                 .anyRequest().authenticated())
+
+                                .formLogin(form -> form
+                                                .loginPage("/login")
+                                                .defaultSuccessUrl("/user/account")
+                                                .permitAll())
+
                                 .sessionManagement(session -> session
                                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
                                 .authenticationProvider(authenticationProvider)
+
                                 .exceptionHandling(exception -> exception
                                                 .authenticationEntryPoint((request, response, authException) -> response
                                                                 .sendError(HttpServletResponse.SC_UNAUTHORIZED,
@@ -78,16 +93,16 @@ public class WebSecurityConfig {
                                                 .accessDeniedHandler((request, response,
                                                                 accessDeniedException) -> response.sendError(
                                                                                 HttpServletResponse.SC_FORBIDDEN,
-                                                                                accessDeniedException.getMessage())))
-                                .headers(headers -> headers
-                                                .httpStrictTransportSecurity(hsts -> hsts
-                                                                .includeSubDomains(true)
-                                                                .maxAgeInSeconds(31536000))
-                                                .contentSecurityPolicy(csp -> csp // Remove 'unsafe-inline'
-                                                                .policyDirectives(
-                                                                                "default-src 'self'; img-src 'self' data:; script-src 'self'"))
-                                                .permissionsPolicy(fp -> fp // Adjust microphone/camera if needed
-                                                                .policy("geolocation 'self'; microphone 'none'; camera 'none'")));
+                                                                                accessDeniedException.getMessage())));
+                // .headers(headers -> headers
+                // .httpStrictTransportSecurity(hsts -> hsts
+                // .includeSubDomains(true)
+                // .maxAgeInSeconds(31536000))
+                // .contentSecurityPolicy(csp -> csp // Remove 'unsafe-inline'
+                // .policyDirectives(
+                // "default-src 'self'; img-src 'self' data:; script-src 'self'"))
+                // .permissionsPolicy(fp -> fp // Adjust microphone/camera if needed
+                // .policy("geolocation 'self'; microphone 'none'; camera 'none'")));
 
                 return http.build();
         }

@@ -17,6 +17,7 @@ import com.hust.smart_Shopping.repositories.FoodRepository;
 import com.hust.smart_Shopping.repositories.UnitRepository;
 import com.hust.smart_Shopping.services.FoodService;
 import com.hust.smart_Shopping.services.ImageService;
+import com.hust.smart_Shopping.utils.MessageKeys;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,10 +36,11 @@ public class FoodServiceImpl implements FoodService {
     @Override
     public Food createFood(String name, String foodCategoryName, String unitName, MultipartFile image, User user) {
         if (foodRepository.existsByName(name))
-            throw new BusinessLogicException("");
+            throw new DataNotFoundException(MessageKeys.NOT_FOUND);
         Category category = categoryRepository.findByName(foodCategoryName)
-                .orElseThrow(() -> new BusinessLogicException(""));
-        Unit unit = unitRepository.findByName(unitName).orElseThrow(() -> new BusinessLogicException(""));
+                .orElseThrow(() -> new BusinessLogicException(MessageKeys.CATEGORY_EXIST));
+        Unit unit = unitRepository.findByName(unitName)
+                .orElseThrow(() -> new DataNotFoundException(MessageKeys.NOT_FOUND));
 
         String imageUrl = imageService.uploadImage(image, "foods");
 
@@ -56,11 +58,13 @@ public class FoodServiceImpl implements FoodService {
 
     @Override
     public Food updateFood(String name, String foodCategoryName, String unitName, MultipartFile image, User user) {
-        Food updateFood = foodRepository.findByName(name).orElseThrow(() -> new DataNotFoundException(""));
+        Food updateFood = foodRepository.findByName(name)
+                .orElseThrow(() -> new DataNotFoundException(MessageKeys.NOT_FOUND));
 
         Category category = categoryRepository.findByName(foodCategoryName)
-                .orElseThrow(() -> new BusinessLogicException(""));
-        Unit unit = unitRepository.findByName(unitName).orElseThrow(() -> new BusinessLogicException(""));
+                .orElseThrow(() -> new BusinessLogicException(MessageKeys.CATEGORY_EXIST));
+        Unit unit = unitRepository.findByName(unitName)
+                .orElseThrow(() -> new BusinessLogicException(MessageKeys.UNIT_EXIST));
 
         String imageUrl = imageService.uploadImage(image, "foods");
 
@@ -77,7 +81,8 @@ public class FoodServiceImpl implements FoodService {
 
     @Override
     public void deleteFood(String name) {
-        Food deleteFood = foodRepository.findByName(name).orElseThrow(() -> new DataNotFoundException(""));
+        Food deleteFood = foodRepository.findByName(name)
+                .orElseThrow(() -> new DataNotFoundException(MessageKeys.NOT_FOUND));
         foodRepository.delete(deleteFood);
         log.debug("delete food: {}", deleteFood);
     }

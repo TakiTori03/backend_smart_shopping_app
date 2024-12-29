@@ -85,7 +85,7 @@ public class UserServiceImpl implements UserService {
                                         MessageKeys.EMAIL_EXISTED);
                 }
                 Role role = roleRepository.findByName(RoleType.USER)
-                                .orElseThrow(() -> new DataNotFoundException(MessageKeys.ROLE_NOT_FOUND));
+                                .orElseThrow(() -> new DataNotFoundException(MessageKeys.NOT_FOUND));
 
                 // convert userRequest -> user
                 User newUser = new User();
@@ -144,7 +144,7 @@ public class UserServiceImpl implements UserService {
         @Override
         public void confirmVerification(RegistrationRequest registration) {
                 Verification verification = verificationRepository.findByCode(registration.getCode())
-                                .orElseThrow(() -> new DataNotFoundException(MessageKeys.USER_NOT_FOUND));
+                                .orElseThrow(() -> new DataNotFoundException(MessageKeys.NOT_FOUND));
 
                 boolean validVerification = verification.getToken().equals(registration.getToken())
                                 && verification.getExpiredAt().isAfter(Instant.now())
@@ -197,7 +197,7 @@ public class UserServiceImpl implements UserService {
                 try {
                         // Tìm user theo email
                         User user = userRepository.findByEmail(email)
-                                        .orElseThrow(() -> new DataNotFoundException(MessageKeys.USER_NOT_FOUND));
+                                        .orElseThrow(() -> new DataNotFoundException(MessageKeys.NOT_FOUND));
 
                         // Kiểm tra xem user đã được active hay chưa
                         if (!user.isActivated()) {
@@ -215,7 +215,8 @@ public class UserServiceImpl implements UserService {
                 } catch (DataNotFoundException ex) {
                         throw ex; // Ném lại exception để được xử lý ở tầng global
                 } catch (BadCredentialsException ex) {
-                        throw new DataNotFoundException("Invalid credentials"); // Xử lý lỗi xác thực sai
+                        throw new DataNotFoundException(MessageKeys.APP_PERMISSION_DENY_EXCEPTION); // Xử lý lỗi xác
+                                                                                                    // thực sai
                 } catch (Exception ex) {
                         throw new RuntimeException("Unexpected error occurred while logging in", ex); // Lỗi không xác
                                                                                                       // định
@@ -230,14 +231,14 @@ public class UserServiceImpl implements UserService {
 
                 String email = jwtTokenUtil.extractEmail(token);
                 return userRepository.findByEmail(email)
-                                .orElseThrow(() -> new DataNotFoundException(MessageKeys.USER_NOT_FOUND));
+                                .orElseThrow(() -> new DataNotFoundException(MessageKeys.NOT_FOUND));
 
         }
 
         @Override
         public VerificationResponse sendVerificationCode(String email) {
                 User user = userRepository.findByEmail(email)
-                                .orElseThrow(() -> new DataNotFoundException(MessageKeys.USER_NOT_FOUND));
+                                .orElseThrow(() -> new DataNotFoundException(MessageKeys.NOT_FOUND));
 
                 Verification verification = verificationRepository.findByUser(user)
                                 .orElseThrow(() -> new AppException(ErrorCode.USER_VERIFIED));
@@ -312,7 +313,7 @@ public class UserServiceImpl implements UserService {
         public Long createGroup(User user) {
                 // kiem tra user da co trong group family nao chua
                 if (userFamilyRepository.existsByUser(user))
-                        throw new BusinessLogicException("");
+                        throw new BusinessLogicException(MessageKeys.YOU_CREATED_FAMILY);
 
                 // tao group family + leader
                 Family family = new Family();
@@ -344,16 +345,16 @@ public class UserServiceImpl implements UserService {
         public void addMember(User leader, String username) {
                 // check nguoi dung da tao group family chua
                 UserFamily userFamily = userFamilyRepository.findByUser(leader)
-                                .orElseThrow(() -> new BusinessLogicException(""));
+                                .orElseThrow(() -> new BusinessLogicException(MessageKeys.YOU_NOT_CREATE_FAMILY));
                 if (!userFamily.getRole().getName().equals(AppConstants.RoleType.LEADER))
-                        throw new BusinessLogicException("");
+                        throw new BusinessLogicException(MessageKeys.YOU_NOT_HAVE_PERMISSION);
 
                 // check username ton tai hay khong va da thuoc 1 group family nao chua
                 User member = userRepository.findByNickname(username)
-                                .orElseThrow(() -> new DataNotFoundException(MessageKeys.USER_NOT_FOUND));
+                                .orElseThrow(() -> new DataNotFoundException(MessageKeys.NOT_FOUND));
 
                 if (userFamilyRepository.findByUser(member).isPresent())
-                        throw new BusinessLogicException("");
+                        throw new BusinessLogicException(MessageKeys.USER_HAVED_FAMILY);
 
                 UserFamily newUserFamily = new UserFamily();
                 newUserFamily.setFamily(userFamily.getFamily());
@@ -378,23 +379,23 @@ public class UserServiceImpl implements UserService {
         public void deleteMember(User leader, String username) {
                 // 1. Kiểm tra xem leader có phải là LEADER của một family hay không
                 UserFamily leaderFamily = userFamilyRepository.findByUser(leader)
-                                .orElseThrow(() -> new BusinessLogicException("Leader chưa tham gia group family nào"));
+                                .orElseThrow(() -> new BusinessLogicException(MessageKeys.YOU_NOT_CREATE_FAMILY));
 
                 if (!AppConstants.RoleType.LEADER.equals(leaderFamily.getRole().getName())) {
-                        throw new BusinessLogicException("Người dùng không phải là LEADER của group family");
+                        throw new BusinessLogicException(MessageKeys.YOU_NOT_HAVE_PERMISSION);
                 }
 
                 // 2. Tìm member cần xóa theo username
                 User member = userRepository.findByNickname(username)
-                                .orElseThrow(() -> new DataNotFoundException(MessageKeys.USER_NOT_FOUND));
+                                .orElseThrow(() -> new DataNotFoundException(MessageKeys.NOT_FOUND));
 
                 // 3. Kiểm tra xem member có thuộc cùng family với leader không
                 UserFamily memberFamily = userFamilyRepository.findByUser(member)
                                 .orElseThrow(() -> new BusinessLogicException(
-                                                "Thành viên này chưa tham gia group family nào"));
+                                                MessageKeys.USER_NOT_HAVED_FAMILY));
 
                 if (leaderFamily.getFamily() != memberFamily.getFamily()) {
-                        throw new BusinessLogicException("Thành viên không thuộc cùng group family với leader");
+                        throw new BusinessLogicException(MessageKeys.YOU_NOT_HAVE_PERMISSION);
                 }
 
                 // 4. Thực hiện xóa UserFamily
@@ -412,7 +413,7 @@ public class UserServiceImpl implements UserService {
         public FamilyInfoResponse getInfoFamily(User user) {
                 // check user da co group family chua
                 UserFamily userFamily = userFamilyRepository.findByUser(user)
-                                .orElseThrow(() -> new BusinessLogicException(""));
+                                .orElseThrow(() -> new BusinessLogicException(MessageKeys.YOU_NOT_CREATE_FAMILY));
 
                 Family family = userFamily.getFamily();
 
@@ -430,7 +431,7 @@ public class UserServiceImpl implements UserService {
         @Override
         public String updateUser(String nickName, MultipartFile image, User user) {
                 if (userRepository.existsByNickname(nickName))
-                        throw new BusinessLogicException("");
+                        throw new BusinessLogicException(MessageKeys.USER_EXISTED);
                 String photoUrl = imageService.uploadImage(image, "users");
 
                 log.debug("update user: {}", user);

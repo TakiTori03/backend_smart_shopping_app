@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.hust.smart_Shopping.models.ShoppingList;
 
@@ -22,10 +23,14 @@ public class ShoppingListResponse {
         private String note;
         private Long beLongsToGroupAdminId;
         private Long assignedtoUserId;
-        @DateTimeFormat(pattern = "MM/dd/yyyy")
+
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
         private LocalDate date;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "UTC")
         private Instant createdAt;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "UTC")
         private Instant updatedAt;
+
         private Long userId;
         private String userName;
         private List<TaskResponse> details;

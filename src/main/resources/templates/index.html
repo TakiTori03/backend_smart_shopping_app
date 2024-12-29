@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="fragments/head :: head"></head>
+
+  <body>
+    <header th:replace="fragments/header :: header"></header>
+
+    <div class="main-container">
+      <div th:replace="fragments/navbar :: navbar"></div>
+      <div class="main">
+        <div class="searchbar2">
+          <input type="text" name="" id="" placeholder="Search" />
+          <div class="searchbtn">
+            <img
+              src="https://media.geeksforgeeks.org/wp-content/uploads/20221210180758/Untitled-design-(28).png"
+              class="icn srchicn"
+              alt="search-button"
+            />
+          </div>
+        </div>
+
+        <div class="box-container">
+          <div class="box box1">
+            <div class="text">
+              <h2 class="topic-heading">60.5k</h2>
+              <h2 class="topic">Article Views</h2>
+            </div>
+
+            <img
+              src="https://media.geeksforgeeks.org/wp-content/uploads/20221210184645/Untitled-design-(31).png"
+              alt="Views"
+            />
+          </div>
+
+          <div class="box box2">
+            <div class="text">
+              <h2 class="topic-heading">150</h2>
+              <h2 class="topic">Likes</h2>
+            </div>
+
+            <img
+              src="https://media.geeksforgeeks.org/wp-content/uploads/20221210185030/14.png"
+              alt="likes"
+            />
+          </div>
+
+          <div class="box box3">
+            <div class="text">
+              <h2 class="topic-heading">320</h2>
+              <h2 class="topic">Comments</h2>
+            </div>
+
+            <img
+              src="https://media.geeksforgeeks.org/wp-content/uploads/20221210184645/Untitled-design-(32).png"
+              alt="comments"
+            />
+          </div>
+
+          <div class="box box4">
+            <div class="text">
+              <h2 class="topic-heading">70</h2>
+              <h2 class="topic">Published</h2>
+            </div>
+
+            <img
+              src="https://media.geeksforgeeks.org/wp-content/uploads/20221210185029/13.png"
+              alt="published"
+            />
+          </div>
+        </div>
+
+        <!-- <div class="col-md-10">
+          <th:block
+            th:replace="fragments/common-fragments :: info-title(
+              text='List of all users',
+              icon='fas fa-users ml-2 mr-2'
+          )"
+          />
+
+          <div th:insert="~{fragments/common-fragments :: pagination}"></div>
+          <th:block
+            th:if="${page.getContent().size() == 0}"
+            th:insert="~{fragments/common-fragments :: empty-result(text='Users not found')}"
+          />
+          <table
+            th:unless="${page.getContent().size() == 0}"
+            class="table mt-4 border text-center"
+          >
+            <thead class="table-active">
+              <tr>
+                <th>id</th>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>E-mail</th>
+                <th>Role</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody th:each="user : ${page.getContent()}">
+              <tr>
+                <th th:text="${user.getId()}"></th>
+                <th th:text="${user.getFirstName()}"></th>
+                <th th:text="${user.getLastName()}"></th>
+                <th th:text="${user.getEmail()}"></th>
+                <th th:text="${user.getRoles().iterator().next()}"></th>
+                <th>
+                  <a
+                    th:href="@{/admin/user/{userId} (userId = ${user.getId()})}"
+                  >
+                    Show more
+                  </a>
+                </th>
+              </tr>
+            </tbody>
+          </table>
+          <div
+            th:unless="${page.getContent().size() == 0}"
+            th:insert="~{fragments/common-fragments :: pagination}"
+          ></div>
+        </div> -->
+      </div>
+    </div>
+
+    <script src="/static/js/index.js"></script>
+  </body>
+</html>

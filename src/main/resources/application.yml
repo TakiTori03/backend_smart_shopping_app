@@ -5,6 +5,14 @@ spring:
   application:
     name: smart_shopping-backend
 
+  mvc:
+    static-path-pattern: /static/**
+
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    cache: false
+
   #config mysql8
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
